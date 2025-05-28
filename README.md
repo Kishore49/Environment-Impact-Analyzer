@@ -28,8 +28,6 @@ This project is built using the following libraries and frameworks:
     python -m venv .venv
     # On Windows
     .\.venv\Scripts\activate
-    # On macOS/Linux
-    source .venv/bin/activate
     ```
 
 3.  **Install the required packages:**
