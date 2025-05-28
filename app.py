@@ -210,8 +210,8 @@ def load_all_data():
         'water_df': water_df,
         'climate': convert_df_to_nested_dict(climate_df, id_col='city', date_col='date', metrics_cols=climate_data_cols),
         'air': convert_df_to_nested_dict(air_df, id_col='city', date_col='date', metrics_cols=air_data_cols),
-        'soil': convert_df_to_nested_dict(soil_df, id_col='city'), # No date_col
-        'water': convert_df_to_nested_dict(water_df, id_col='city')  # No date_col
+        'soil': convert_df_to_nested_dict(soil_df, id_col='city'), 
+        'water': convert_df_to_nested_dict(water_df, id_col='city') 
     }
     return loaded_data
 
@@ -221,14 +221,13 @@ air_data = data_dict['air']
 soil_data = data_dict['soil']
 water_data = data_dict['water']
 
-# --- Gemini AI Model Initialization (Conditional) ---
+# --- Gemini AI Model Initialization ---
 GEMINI_MODEL = None
 if GENAI_AVAILABLE:
     try:
-        # API key hardcoded as per user request
-        api_key = "AIzaSyA0HHh4kHhwTb-tXYfIx-wLmtBnGjaygUA"
+        api_key = "YOUR_GEMINI_API_KEY"
         
-        if not api_key: # Should not happen with hardcoding unless the string is empty
+        if not api_key:
             st.sidebar.error(
                 "Google API Key is missing (hardcoded value not found/empty). AI features disabled.",
                 icon="🔑"
@@ -243,7 +242,6 @@ else:
     st.sidebar.info("Google Generative AI library not installed. AI features disabled.", icon="ℹ️")
 
 
-# --- Feature Functions (Health Score, Risk Assessment, Comparison) ---
 def calculate_environmental_health_score(city_name):
     score_components = {'air_quality': 0, 'water_access_quality': 0, 'climate_stability': 0, 'soil_quality': 0}
     weights = {'air_quality': 0.35, 'water_access_quality': 0.25, 'climate_stability': 0.20, 'soil_quality': 0.20}
@@ -263,7 +261,7 @@ def calculate_environmental_health_score(city_name):
 
     # Water Access & Quality Score
     if city_name in water_data and water_data[city_name]:
-        wc_data = water_data[city_name] # This is now a dict for the city
+        wc_data = water_data[city_name]
         dist_score, qual_score = 0, 0
         distance = wc_data.get('minimum distance')
         if pd.notna(distance):
@@ -273,7 +271,7 @@ def calculate_environmental_health_score(city_name):
             elif distance <= 50: dist_score = 25
             else: dist_score = 0
         quality = wc_data.get('water_quality_index')
-        if pd.notna(quality): qual_score = max(0, min(100, quality)) # Assume WQI is 0-100
+        if pd.notna(quality): qual_score = max(0, min(100, quality))
         score_components['water_access_quality'] = (0.6 * qual_score) + (0.4 * dist_score)
 
     # Climate Stability Score
@@ -532,7 +530,6 @@ def search_city_in_bst(city_key_to_search, bst_instance):
     return single_line_output, formatted_output
 
 
-# --- UI Layout Starts ---
 all_available_cities = sorted(list(set(list(climate_data.keys()) + list(air_data.keys()) + list(soil_data.keys()) + list(water_data.keys()))))
 
 with st.sidebar:
@@ -562,9 +559,9 @@ if page == "🏠 Home":
         try:
             # Ensure you have an image at this path or update it
             st.image("assets/Simple_Environment.jpeg", use_container_width=True, caption="Sustainable Futures Start Here")
-        except FileNotFoundError: # This is a generic Python error, Streamlit might have its own way to handle image errors or just fail gracefully.
+        except FileNotFoundError: 
             st.markdown("<div class='alert-box alert-warning'>ℹ️ Banner image 'assets/Simple_Environment.jpeg' not found. Please check the path or add the image. The error message in the code refers to '5825745.jpg' which might be an alternative intended image.</div>", unsafe_allow_html=True)
-        except Exception as e: # Catch other potential errors like permission issues, corrupt file etc.
+        except Exception as e: 
             st.markdown(f"<div class='alert-box alert-danger'>🔥 Error loading banner image: {e}</div>", unsafe_allow_html=True)
 
 
