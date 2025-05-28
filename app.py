@@ -7,15 +7,14 @@ import plotly.graph_objects as go
 from datetime import datetime, timedelta
 import numpy as np
 
-# Attempt to import Google Generative AI
+
 try:
     import google.generativeai as genai
     GENAI_AVAILABLE = True
 except ImportError:
     GENAI_AVAILABLE = False
-    genai = None # Placeholder if not installed
+    genai = None 
 
-# Enhanced page configuration
 st.set_page_config(
     page_title="Environment Impact Analyzer",
     page_icon="🌿",
@@ -23,7 +22,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
 st.markdown("""
 <style>
     .main-header {
@@ -64,7 +62,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# Enhanced title with styling
 st.markdown("""
 <div class="main-header">
     <h1>🌿 Environment Impact Analyzer</h1>
@@ -72,7 +69,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- Global NpEncoder Class ---
 class NpEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.integer):
@@ -87,12 +83,12 @@ class NpEncoder(json.JSONEncoder):
             return obj.isoformat()
         return super(NpEncoder, self).default(obj)
 
-# --- Sample Data Generation ---
+
 @st.cache_data
 def get_sample_data():
     """Generates sample Pandas DataFrames for climate, air, soil, and water."""
     cities = [
-        # Tamil Nadu Cities (Expanded)
+        # Tamil Nadu Cities
     "Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Erode",
     "Tirunelveli", "Tiruppur", "Vellore", "Thoothukudi", "Nagercoil", "Dindigul",
     "Thanjavur", "Karur", "Namakkal", "Kanchipuram", "Cuddalore", "Villupuram",
